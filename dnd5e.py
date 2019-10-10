@@ -1,46 +1,54 @@
 #!/usr/bin/python
 
-# Random Character Generator v1.7
+# Random Character Generator v1.9
 
 # Program requires termcolor to be installed
 # you can download this via pip install termcolor
+# because I am not making a requirements.txt for 1 package
 
 from os import urandom
 from time import sleep
 import random
 from termcolor import colored,cprint
 
-# race dictionary
+# race array
 races = ['Tortle',
-		 'Dragonborn', 
-		 'Dwarf', 
-		 'Elf', 
-		 'Gnome', 
-		 'Half-Elf', 
-		 'Half-Orc', 
-		 'Halfling', 
-		 'Human', 
-		 'Tiefling', 
-		 'Aarakocra',
-		 'Aasimar',
-		 'Bugbear',
+		 'Dragonborn', #PHB
+		 'Dwarf', #PHB
+		 'Elf', #PHB 
+		 'Gnome', #PHB 
+		 'Half-Elf', #PHB 
+		 'Half-Orc', #PHB 
+		 'Halfling', #PHB 
+		 'Human', #PHB 
+		 'Tiefling', #PHB 
+		 'Aarakocra', #VGM
+		 'Aasimar', #VGM
+		 'Bugbear', #VGM
 		 'Firbolg',
-		 'Goblin',
+		 'Goblin', #VGM
 		 'Grung',
-		 'Hobgoblin',
-		 'Kenku',
-		 'Kobold',
-		 'Lizardfolk',
-		 'Orc',
-		 'Tabaxi',
+		 'Hobgoblin', #VGM
+		 'Kenku', #VGM
+		 'Kobold', #VGM
+		 'Lizardfolk', #VGM
+		 'Orc', #VGM
+		 'Tabaxi', #VGM
 		 'Triton',
-		 'Yuan-Ti Pureblood',
+		 'Yuan-Ti Pureblood', #VGM
 		 'Goliath',
 		 'Genasi',
-		 'Minotaur',
-		 'Centaur',
-		 'Gith',
-		 'Awakened Undead'
+		 'Minotaur', #Ravnica
+		 'Centaur', #Ravnica
+		 'Gith', #MTOF
+		 'Awakened Undead', #dndBeyond homebrew
+		 'Verdan', #AcqInc
+		 'Loxodon', #Ravnica
+		 'Vedalken', #Ravnica
+		 'Warforged', #Wayfinders Eberron (DMs Guild)
+		 'Changeling', #Wayfinders Eberron (DMs Guild)
+		 'Shifter', #Wayfinders Eberron (DMs Guild)
+		 'Kalashtar', #Wayfinders Eberron (DMs Guild)
 ]
 
 # subrace dictionaries
@@ -52,6 +60,8 @@ gith_subraces = {0: 'Githyanki', 1: 'Githzerai'}
 gnome_subraces = {0: 'Forest Gnome', 1: 'Rock Gnome', 2: 'Deep Gnome'}
 halfelf_subraces = {0: 'Half-Elf of Drow descent', 1: 'Half-Elf of High descent', 2: 'Half-Elf of Wood descent', 3: 'Half-Elf of Aquatic descent'}
 halfling_subraces = {0: 'Lightfoot Halfling', 1: 'Stout Halfling', 2: 'Ghostwise Halfling', 3: 'Other', 4: 'Other', 5: 'Other'}
+shifter_subraces = {0: 'Beasthide Shifter', 1: 'Longtooth Shifter', 2: 'Swiftstride Shifter', 3: 'Wildhunt Shifter'}
+warforged_subraces = {0: 'Envoy Warforged', 1: 'Juggernaut Warforged', 2: 'Skirmisher Warforged'}
 
 otherhalfling_subraces = { 0: 'Half-Halfling / Half-Orc',
 						   1: 'Half-Halfling / Half-Dragonborn',
@@ -103,7 +113,7 @@ dragonborn_subraces = { 0: 'Black',
 						9: 'White',
 }
 
-# class dictionary (13 classes)
+# class dictionary (14 classes)
 dndclass = ['Barbarian',
 			'Bard',
 			'Cleric',
@@ -116,8 +126,9 @@ dndclass = ['Barbarian',
 			'Sorcerer',
 			'Warlock',
 			'Wizard',
-			'Blood Hunter',
-			'Artificer'
+			'Blood Hunter', #Matt Mercer
+			'Artificer', #UA
+			'Illrigger', #Strongholds and Followers Add-on Supplement
 ]
 
 # class specialty/archetype/school/college etc. dictionaries
@@ -127,6 +138,7 @@ barbarian_subclass = { 0: 'Path of the Ancestral Guardian',
 					   3: 'Path of the Storm Herald',
 					   4: 'Path of the Totem Warrior',
 					   5: 'Path of the Zealot',
+					   6: 'Path of the Wild Soul',
 }
 
 bard_subclass = { 0: 'College of Glamour',
@@ -148,7 +160,8 @@ cleric_subclass = { 0: 'Forge Domain',
 					8: 'Light Domain',
 					9: 'Nature Domain',
 					10: 'War Domain',
-					11: 'Order Domain'	#Ravnica p.25
+					11: 'Order Domain',	#Ravnica p.25
+					12: 'Blood Domain'
 }
 
 
@@ -199,6 +212,7 @@ monk_subclass = { 0: 'Way of the Drunken Master',
 				  5: 'Way of Shadow',
 				  6: 'Way of the Sun Soul',
 				  7: 'Way of Tranquility',
+				  8: 'Way of the Cobalt Soul', #Taldorei
 }
 
 
@@ -209,6 +223,7 @@ paladin_subclass = { 0: 'Oath of Conquest',
 					 4: 'Oath of the Crown',
 					 5: 'Oath of Devotion',
 					 6: 'Oathbreaker',
+					 7: 'Oath of Secrets', #Ebonclad p.72
 }
 
 paladin_style = { 0: 'Defense',
@@ -247,6 +262,7 @@ sorcerer_subclass = { 0: 'Divine Soul',
 					  2: 'Shadow Magic',
 					  3: 'Storm Sorcery',
 					  4: 'Wild Magic',
+					  5: 'Phoenix Sorcery',
 }
 
 
@@ -290,8 +306,15 @@ bloodhunter_rites = { 0: 'Rite of the Flame',
 					  2: 'Rite of the Storm',
 }
 
-artificer_subclass = {0: 'Alchemist', 1: 'Artillerist'}
+artificer_subclass = {0: 'Alchemist', 1: 'Artillerist'} #Update with the new artificer changes when Eberron is released!
 
+illrigger_subclass = {0: 'Shadowmaster', 1: 'Painkiller', 2: 'Architect of Ruin'}
+
+illrigger_style = { 0: 'Treachery',
+					1: 'Bravado',
+					2: 'Schemes',
+					3: 'Lies',
+}
 
 # random dictionaries
 
@@ -309,52 +332,75 @@ alignment = { 0: 'Lawful Good',
 			  7: 'Neutral Evil',
 			  8: 'Chaotic Evil',
 }
-
-background = { 0: 'Acolyte',
-			   1: 'Anthropologist',
-			   2: 'Archaeologist',
-			   3: 'Caravan Specialist',
-			   4: 'Charlatan',
-			   5: 'City Watch',
-			   6: 'Clan Crafter',
-			   7: 'Cloistered Scholar',
-			   8: 'Courtier',
-			   9: 'Criminal',
-			   10: 'Earthspur Miner',
-			   11: 'Entertainer',
-			   12: 'Faction Agent',
-			   13: 'Far Traveler',
-			   14: 'Folk Hero',
-			   15: 'Gladiator',
-			   16: 'Guild Artisan',
-			   17: 'Guild Merchant',
-			   18: 'Harborfolk',
-			   19: 'Hermit',
-			   20: 'Inheritor',
-			   21: 'Investigator',
-			   22: 'Knight',
-			   23: 'Knight of the Order',
-			   24: 'Mercenary Veteran',
-			   25: 'Mulmaster Aristocrat',
-			   26: 'Noble',
-			   27: 'Outlander',
-			   28: 'Pirate',
-			   29: 'Sage',
-			   30: 'Sailor',
-			   31: 'Secret Identity',
-			   32: 'Shade Fantastic',
-			   33: 'Soldier',
-			   34: 'Spy',
-			   35: 'Trade Sheriff',
-			   36: 'Urban Bounty Hunter',
-			   37: 'Urchin',
-			   38: 'Uthgardt Tribe Member',
-			   39: 'Waterdhavian Noble',
-			   40: 'Cormanthor Refugee',
-			   41: 'Gate Urchin',
-			   42: 'Hillsfar Merchant',
-			   43: 'Hillsfar Smuggler',
+#Need to list where these are from in the comments
+background = { 0: 'Acolyte', #PHB
+			   1: 'Anthropologist', #ToA
+			   2: 'Archaeologist', #ToA
+			   3: 'Caravan Specialist', #EE-AL
+			   4: 'Charlatan', #PHB
+			   5: 'City Watch', #SCAG
+			   6: 'Clan Crafter', #SCAG
+			   7: 'Cloistered Scholar', #SCAG
+			   8: 'Courtier', #SCAG
+			   9: 'Criminal', #PHB
+			   10: 'Earthspur Miner', #EE-AL
+			   11: 'Entertainer', #PHB
+			   12: 'Faction Agent', #SCAG
+			   13: 'Far Traveler', #SCAG
+			   14: 'Folk Hero', #PHB
+			   15: 'Gladiator', #PHB
+			   16: 'Guild Artisan', #PHB
+			   17: 'Guild Merchant', #PHB
+			   18: 'Harborfolk', #EE-AL
+			   19: 'Hermit', #PHB
+			   20: 'Inheritor', #SCAG
+			   21: 'Investigator', #SCAG
+			   22: 'Knight', #PHB
+			   23: 'Knight of the Order', #SCAG
+			   24: 'Mercenary Veteran', #SCAG
+			   25: 'Mulmaster Aristocrat', #EE-AL
+			   26: 'Noble', #PHB
+			   27: 'Outlander', #PHB
+			   28: 'Pirate', #PHB
+			   29: 'Sage', #PHB
+			   30: 'Sailor', #PHB
+			   31: 'Secret Identity', #RoD-AL
+			   32: 'Shade Fanatic', #RoD-AL
+			   33: 'Soldier', #PHB
+			   34: 'Spy', #PHB
+			   35: 'Trade Sheriff', #RoD-AL
+			   36: 'Urban Bounty Hunter', #SCAG
+			   37: 'Urchin', #PHB
+			   38: 'Uthgardt Tribe Member', #SCAG
+			   39: 'Waterdhavian Noble', #SCAG
+			   40: 'Cormanthor Refugee', #RoD-AL
+			   41: 'Gate Urchin', #RoD-AL
+			   42: 'Hillsfar Merchant', #RoD-AL
+			   43: 'Hillsfar Smuggler', #RoD-AL
+			   44: 'Celebrity Adventurer\'s Scion', #AcqInc
+			   45: 'Failed Merchant', #AcqInc
+			   46: 'Plaintiff', #AcqInc
+			   47: 'Rival Intern', #AcqInc
+			   48: 'Haunted One', #CoS
+			   49: 'Black Fist Double Agent', #CoS-AL
+			   50: 'Dragon Casualty', #CoS-AL
+			   51: 'Iron Route Bandit', #CoS-AL
+			   52: 'Phlan Insurgent', #CoS-AL
+			   53: 'Stojanow Prisoner', #CoS-AL
+			   54: 'Ticklebelly Nomad', #CoS-AL
+			   55: 'Phlan Refugee', #EE-AL
+			   56: 'Clasp Member', #Taldorei
+			   57: 'Lyceum Student', #Taldorei
+			   58: 'Ashari', #Taldorei
+			   59: 'Recovered Cultist', #Taldorei
+			   60: 'Fate-Touched', #Taldorei
 }
+
+bgFeature = [ 'Cult of the Dragon Infiltrator', #HoTDQ
+			  'Dragon Scholar', #HoTDQ
+			  'Deep Delver', #OoTA
+			  'Underdark Experience', #OoTA
+]
 
 factions = { 0: 'The Lords\' Alliance',
 			 1: 'The Emerald Enclave',
@@ -428,7 +474,7 @@ racialScores = { 'Mountain Dwarf': 'Str + 2, Con +2',
 				 'Minotaur': 'Str +2, Con +1',
 				 'Centaur': 'Str +2, Wis +1',
 				 'Half-Halfling / Quarter-Orc': 'Str +1, Dex +1',
-				 'Half-Halfling / Quarter-Elf': 'Dex +1, +1 to any other skill',
+				 'Half-Halfling / Quarter-Elf': 'Dex +1, +1 to any other ability score',
 				 'Half-Halfling / Half-Tiefling': 'Cha +1, Dex+1',
 				 'Half-Halfling / Half-Orc': 'Str +1, Dex +1',
 				 'Half-Halfling / Half-Dragonborn': 'Dex +1, Con +1',
@@ -441,80 +487,104 @@ racialScores = { 'Mountain Dwarf': 'Str + 2, Con +2',
 				 'Half-Halfling / Half-Bugbear': 'Str +1, Dex +1',
 				 'Half-Halfling / Half-Aasimar': 'Cha +1, Dex +1',
 				 'Awakened Undead': 'Con +2, Dex +1',
+				 'Verdan': 'Cha +2, Con +1',
+				 'Loxodon': 'Con +2, Wis +1',
+				 'Vedalken': 'Int +2, Wis +1',
+				 'Envoy Warforged': 'Con +1, 2 other ability scores of your choice get +1',
+				 'Juggernaut Warforged': 'Str +2, Con +1',
+				 'Skirmisher Warforged': 'Dex +2, Con +1',
+				 'Changeling': 'Cha +2, either +1 Dex or +1 Int',
+				 'Longtooth Shifter': 'Str +2, Dex +1',
+				 'Beasthide Shifter': 'Con +2, Dex +1',
+				 'Swiftstride Shifter': 'Dex +2, Cha +1',
+				 'Wildhunt Shifter': 'Wis +2, Dex +1',
+				 'Kalashtar': 'Wis +1, Cha +1, +1 to any other ability score',
 }
 
-racials = { 'Mountain Dwarf': '\n\t- Darkvision (60ft), \n\t- Dwarven Resilience, \n\t- Dwarven Combat Training, \n\t- 1 Tool Proficiency from: (smith\'s tools, brewer\'s tools, mason\'s tools), \n\t- Stonecunning, \n\t- Language: Dwarven, Common, \n\t- Dwarven Armor Training',
-			'Hill Dwarf': '\n\t- Darkvision (60ft), \n\t- Dwarven Resilience, \n\t- Dwarven Combat Training, \n\t- 1 Tool Proficiency from: (smith\'s tools, brewer\'s tools, mason\'s tools), \n\t- Stonecunning, \n\t- Language: Dwarven, Common, \n\t- Dwarven Toughness',
-			'Duergar': '\n\t- Superior Darkvision (120ft), \n\t- Language: Undercommon, Dwarven, Common, \n\t- Duergar Resilience, \n\t- Sunlight Sensitivity, \n\t- Duergar Magic (INT): Enlarge/Reduce (@ 3rd level), Invisibility (@ 5th level), \n\t  these recharge after a long rest',
-			'High Elf': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Language: Elven, Common, +1 additional, \n\t- Elf Weapon Training, Cantrip (INT) Wizard Spell List)',
-			'Wood Elf': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Language: Elven, Common, \n\t- Elf Weapon Training, \n\t- Fleet of Foot (35 ft movement), \n\t- Mark of the Wild',
-			'Drow': '\n\t- Superior Darkvision (120ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Language: Elven, Common, Undercommon, \n\t- Drow Weapon Training, \n\t- Sunlight Sensitivity, \n\t- Drow Magic (CHA): Dancing Lights (@ 3rd level), Darkness (@ 5th level), these recharge after a long rest',
-			'Eladrin': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Language: Elven, Common, \n\t- Fey Step',
-			'Shadar-Kai': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Language: Elven, Common, \n\t- Necrotic Resistance, \n\t- Blessing of the Raven Queen',
-			'Sea Elf': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Language: Elven, Common, Aquan, \n\t- Sea Elf Training, \n\t- Child of the Sea, \n\t- Friend of the Sea',
-			'Lightfoot Halfling': '\n\t- Lucky, \n\t- Brave, \n\t- Halfling Nimbleness, \n\t- Language: Halfling, Common, \n\t- Naturally Stealthy',
-			'Stout Halfling': '\n\t- Lucky, \n\t- Brave, \n\t- Halfling Nimbleness, \n\t- Language: Halfling, Common, \n\t- Stout Resilience',
-			'Ghostwise Halfling': '\n\t- Lucky, \n\t- Brave, \n\t- Halfling Nimbleness, \n\t- Language: Halfling, Common, \n\t- Silent Speech',
-			'Human': '\n\t- Language: Common, +1 additional, \n\t- One feat of your choice, \n\t- One skill proficiency of your choice',
-			'Black Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Acid), \n\t- Damage Resistance (Acid), \n\t- Language: Draconic, Common',
-			'Blue Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Lightning), \n\t- Damage Resistance (Lightning), \n\t- Language: Draconic, Common',
-			'Brass Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Fire), \n\t- Damage Resistance (Fire), \n\t- Language: Draconic, Common',
-			'Bronze Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Lightning), \n\t- Damage Resistance (Lightning), \n\t- Language: Draconic, Common',
-			'Copper Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Acid), \n\t- Damage Resistance (Acid), \n\t- Language: Draconic, Common',
-			'Gold Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Fire), \n\t- Damage Resistance (Fire), \n\t- Language: Draconic, Common',
-			'Green Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Poison), \n\t- Damage Resistance (Poison), \n\t- Language: Draconic, Common',
-			'Red Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Fire), \n\t- Damage Resistance (Fire), \n\t- Language: Draconic, Common',
-			'Silver Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Cold), \n\t- Damage Resistance (Cold), \n\t- Language: Draconic, Common',
-			'White Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Cold), \n\t- Damage Resistance (Cold), \n\t- Language: Draconic, Common',
-			'Forest Gnome': '\n\t- Darkvision (60ft), \n\t- Gnome Cunning, \n\t- Language: Gnomish, Common, \n\t- Natural Illusionist, \n\t- Speak with Small Beasts',
-			'Rock Gnome': '\n\t- Darkvision (60ft), \n\t- Gnome Cunning, \n\t- Language: Gnomish, Common, \n\t- Artificer\'s Lore, \n\t- Tinker',
-			'Deep Gnome': '\n\t- Superior Darkvision (120ft), \n\t- Gnome Cunning, \n\t- Language: Gnomish, Common, Undercommon, \n\t- Stone Camoflague',
-			'Half-Elf of Drow descent': '\n\t- Darkvision (60ft), \n\t- Fey Ancestry, \n\t- Language: Common, Elven, +1 additional, \n\t- Skill Versatility or Drow Magic',
-			'Half-Elf of High descent': '\n\t- Darkvision (60ft), \n\t- Fey Ancestry, \n\t- Language: Common, Elven, +1 additional, \n\t- Skill Versatility or either Elf Weapon Training or Cantrip',
-			'Half-Elf of Wood descent': '\n\t- Darkvision (60ft), \n\t- Fey Ancestry, \n\t- Language: Common, Elven, +1 additional, \n\t- Skill Versatility or either Elf Weapon Training, Fleet of Foot, or Mask of the Wild',
-			'Half-Elf of Aquatic descent': '\n\t- Darkvision (60ft), \n\t- Fey Ancestry, \n\t- Language: Common, Elven, +1 additional, \n\t- Skill Versatility or a swimming speed of 30ft',
-			'Half-Orc': '\n\t- Darkvision (60ft), \n\t- Menacing, \n\t- Relentless Endurance, \n\t- Savage Attacks, \n\t- Language: Common, Orc',
-			'Tiefling': '\n\t- Darkvision (60ft), \n\t- Hellish Resistance, \n\t- Infernal Legacy, \n\t- Language: Infernal, Common',
-			'Earth Genasi': '\n\t- Language: Primordial, Common,\n\t- Earth Walk, \n\t- Merge with Stone',
-			'Water Genasi': '\n\t- Language: Primordial, Common,\n\t- Acid Resistance, \n\t- Amphibious, \n\t- Swim Speed (30ft),\n\t- Call to the Wave',
-			'Air Genasi': '\n\t- Language: Primordial, Common,\n\t- Unending Breath, \n\t- Mingle with the Wind',
-			'Fire Genasi': '\n\t- Language: Primordial, Common,\n\t- Darkvision (60ft), \n\t- Fire Resistance, \n\t- Reach to the Blaze',
-			'Githyanki': '\n\t- Language: Gith, Common, +1 additional \n\t- Decadent Mastery, \n\t- Martial Prodigy, \n\t- Githyanki Psionics (INT): Jump (@ 3rd level), Misty Step (@ 5th level), \n\t these recharge after a long rest',
-			'Githzerai': '\n\t- Language: Gith, Common, \n\t- Mental Discipline, \n\t- Githzerai Psionics (WIS): Shield (@ 3rd level), Detect Thoughts (@ 5th level), \n\t these recharge after a long rest',
-			'Aarakocra': '\n\t- Flight (50ft), \n\t- Talons (1d4), \n\t- Language: Auran, Aarakocra, Common',
-			'Goliath': '\n\t- Natural Athlete, \n\t- Stone\'s Endurance, \n\t- Powerful Build, \n\t- Mountain Born, \n\t- Language: Common, Giant',
-			'Tortle': '\n\t- Claws (1d4), \n\t- Hold Breath, \n\t- Natural Armor, \n\t- Shell Defense, \n\t- Survival Instinct, \n\t- Language: Aquan, Common',
-			'Protector Aasimar': '\n\t- Darkvision (60ft), \n\t- Celestial Resistance, \n\t- Healing Hands, \n\t- Light Bearer, \n\t- Language: Common, Celestial, \n\t- Radiant Soul',
-			'Scourge Aasimar': '\n\t- Darkvision (60ft), \n\t- Celestial Resistance, \n\t- Healing Hands, \n\t- Light Bearer, \n\t- Language: Common, Celestial, \n\t- Radiant Consumption',
-			'Fallen Aasimar': '\n\t- Darkvision (60ft), \n\t- Celestial Resistance, \n\t- Healing Hands, \n\t- Light Bearer, \n\t- Language: Common, Celestial, \n\t- Necrotic Shroud',
-			'Firbolg': '\n\t- Firbolg Magic (WIS): detect magic, disguise self, these recharge after a short or long rest, \n\t- Hidden Step, \n\t- Powerful Build, \n\t- Speech of Beast and Leaf, \n\t- Language: Common, Elvish, Giant',
+racials = { 'Mountain Dwarf': '\n\t- Darkvision (60ft), \n\t- Dwarven Resilience, \n\t- Dwarven Combat Training, \n\t- 1 Tool Proficiency from: (smith\'s tools, brewer\'s tools, mason\'s tools), \n\t- Stonecunning, \n\t- Dwarven Armor Training, \n\t- Languages: Dwarven, Common',
+			'Hill Dwarf': '\n\t- Darkvision (60ft), \n\t- Dwarven Resilience, \n\t- Dwarven Combat Training, \n\t- 1 Tool Proficiency from: (smith\'s tools, brewer\'s tools, mason\'s tools), \n\t- Stonecunning, \n\t- Dwarven Toughness, \n\t- Languages: Dwarven, Common',
+			'Duergar': '\n\t- Superior Darkvision (120ft), \n\t- Duergar Resilience, \n\t- Sunlight Sensitivity, \n\t- Duergar Magic (INT): Enlarge/Reduce (@ 3rd level), Invisibility (@ 5th level), \n\t  these recharge after a long rest, \n\t- Languages: Undercommon, Dwarven, Common',
+			'High Elf': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Elf Weapon Training, Cantrip (INT) Wizard Spell List), \n\t- Languages: Elven, Common, +1 Additional',
+			'Wood Elf': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Elf Weapon Training, \n\t- Fleet of Foot (35 ft movement), \n\t- Mark of the Wild, \n\t- Languages: Elven, Common',
+			'Drow': '\n\t- Superior Darkvision (120ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Drow Weapon Training, \n\t- Sunlight Sensitivity, \n\t- Drow Magic (CHA): Dancing Lights (@ 3rd level), Darkness (@ 5th level), these recharge after a long rest, \n\t- Languages: Elven, Common, Undercommon',
+			'Eladrin': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Fey Step, \n\t- Languages: Elven, Common',
+			'Shadar-Kai': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Necrotic Resistance, \n\t- Blessing of the Raven Queen, \n\t- Languages: Elven, Common',
+			'Sea Elf': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Fey Ancestry, \n\t- Trance, \n\t- Sea Elf Training, \n\t- Child of the Sea, \n\t- Friend of the Sea, \n\t- Languages: Elven, Common, Aquan',
+			'Lightfoot Halfling': '\n\t- Lucky, \n\t- Brave, \n\t- Halfling Nimbleness, \n\t- Naturally Stealthy, \n\t- Languages: Halfling, Common',
+			'Stout Halfling': '\n\t- Lucky, \n\t- Brave, \n\t- Halfling Nimbleness, \n\t- Stout Resilience, \n\t- Languages: Halfling, Common',
+			'Ghostwise Halfling': '\n\t- Lucky, \n\t- Brave, \n\t- Halfling Nimbleness, \n\t- Silent Speech, \n\t- Languages: Halfling, Common',
+			'Human': '\n\t- One feat of your choice, \n\t- One skill proficiency of your choice, \n\t- Languages: Common, +1 Additional',
+			'Black Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Acid), \n\t- Damage Resistance (Acid), \n\t- Languages: Draconic, Common',
+			'Blue Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Lightning), \n\t- Damage Resistance (Lightning), \n\t- Languages: Draconic, Common',
+			'Brass Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Fire), \n\t- Damage Resistance (Fire), \n\t- Languages: Draconic, Common',
+			'Bronze Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Lightning), \n\t- Damage Resistance (Lightning), \n\t- Languages: Draconic, Common',
+			'Copper Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Acid), \n\t- Damage Resistance (Acid), \n\t- Languages: Draconic, Common',
+			'Gold Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Fire), \n\t- Damage Resistance (Fire), \n\t- Languages: Draconic, Common',
+			'Green Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Poison), \n\t- Damage Resistance (Poison), \n\t- Languages: Draconic, Common',
+			'Red Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Fire), \n\t- Damage Resistance (Fire), \n\t- Languages: Draconic, Common',
+			'Silver Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Cold), \n\t- Damage Resistance (Cold), \n\t- Languages: Draconic, Common',
+			'White Dragonborn': '\n\t- Draconic Ancestry, \n\t- Breath Weapon (Cold), \n\t- Damage Resistance (Cold), \n\t- Languages: Draconic, Common',
+			'Forest Gnome': '\n\t- Darkvision (60ft), \n\t- Gnome Cunning, \n\t- Natural Illusionist, \n\t- Speak with Small Beasts, \n\t- Languages: Gnomish, Common',
+			'Rock Gnome': '\n\t- Darkvision (60ft), \n\t- Gnome Cunning, \n\t- Artificer\'s Lore, \n\t- Tinker, \n\t- Languages: Gnomish, Common',
+			'Deep Gnome': '\n\t- Superior Darkvision (120ft), \n\t- Gnome Cunning, \n\t- Stone Camoflague, \n\t- Languages: Gnomish, Common, Undercommon',
+			'Half-Elf of Drow descent': '\n\t- Darkvision (60ft), \n\t- Fey Ancestry, \n\t- Skill Versatility or Drow Magic, \n\t- Languages: Common, Elven, +1 Additional',
+			'Half-Elf of High descent': '\n\t- Darkvision (60ft), \n\t- Fey Ancestry, \n\t- Skill Versatility or either Elf Weapon Training or Cantrip, \n\t- Languages: Common, Elven, +1 Additional',
+			'Half-Elf of Wood descent': '\n\t- Darkvision (60ft), \n\t- Fey Ancestry, \n\t- Skill Versatility or either Elf Weapon Training, Fleet of Foot, or Mask of the Wild, \n\t- Languages: Common, Elven, +1 Additional',
+			'Half-Elf of Aquatic descent': '\n\t- Darkvision (60ft), \n\t- Fey Ancestry, \n\t- Skill Versatility or a swimming speed of 30ft, \n\t- Languages: Common, Elven, +1 Additional',
+			'Half-Orc': '\n\t- Darkvision (60ft), \n\t- Menacing, \n\t- Relentless Endurance, \n\t- Savage Attacks, \n\t- Languages: Common, Orc',
+			'Tiefling': '\n\t- Darkvision (60ft), \n\t- Hellish Resistance, \n\t- Infernal Legacy, \n\t- Languages: Infernal, Common',
+			'Earth Genasi': '\n\t- Earth Walk, \n\t- Merge with Stone, \n\t- Languages: Primordial, Common',
+			'Water Genasi': '\n\t- Acid Resistance, \n\t- Amphibious, \n\t- Swim Speed (30ft),\n\t- Call to the Wave, \n\t- Languages: Primordial, Common',
+			'Air Genasi': '\n\t- Unending Breath, \n\t- Mingle with the Wind, \n\t- Languages: Primordial, Common',
+			'Fire Genasi': '\n\t- Darkvision (60ft), \n\t- Fire Resistance, \n\t- Reach to the Blaze, \n\t- Languages: Primordial, Common',
+			'Githyanki': '\n\t- Decadent Mastery, \n\t- Martial Prodigy, \n\t- Githyanki Psionics (INT): Jump (@ 3rd level), Misty Step (@ 5th level), \n\t these recharge after a long rest, \n\t- Languages: Gith, Common, +1 Additional',
+			'Githzerai': '\n\t- Mental Discipline, \n\t- Githzerai Psionics (WIS): Shield (@ 3rd level), Detect Thoughts (@ 5th level), \n\t these recharge after a long rest, \n\t- Languages: Gith, Common',
+			'Aarakocra': '\n\t- Flight (50ft), \n\t- Talons (1d4), \n\t- Languages: Auran, Aarakocra, Common',
+			'Goliath': '\n\t- Natural Athlete, \n\t- Stone\'s Endurance, \n\t- Powerful Build, \n\t- Mountain Born, \n\t- Languages: Common, Giant',
+			'Tortle': '\n\t- Claws (1d4), \n\t- Hold Breath, \n\t- Natural Armor, \n\t- Shell Defense, \n\t- Survival Instinct, \n\t- Languages: Aquan, Common',
+			'Protector Aasimar': '\n\t- Darkvision (60ft), \n\t- Celestial Resistance, \n\t- Healing Hands, \n\t- Light Bearer, \n\t- Radiant Soul, \n\t- Languages: Common, Celestial',
+			'Scourge Aasimar': '\n\t- Darkvision (60ft), \n\t- Celestial Resistance, \n\t- Healing Hands, \n\t- Light Bearer, \n\t- Radiant Consumption, \n\t- Languages: Common, Celestial',
+			'Fallen Aasimar': '\n\t- Darkvision (60ft), \n\t- Celestial Resistance, \n\t- Healing Hands, \n\t- Light Bearer, \n\t- Necrotic Shroud, \n\t- Languages: Common, Celestial',
+			'Firbolg': '\n\t- Firbolg Magic (WIS): detect magic, disguise self, these recharge after a short or long rest, \n\t- Hidden Step, \n\t- Powerful Build, \n\t- Speech of Beast and Leaf, \n\t- Languages: Common, Elvish, Giant',
 			'Kenku': '\n\t- Expert Forgery, \n\t- Kenku Training, \n\t- Mimicry, \n\t- Languages: Common, Auran (can only speak using mimicry)',
-			'Lizardfolk': '\n\t- Bite (1d6), \n\t- Cunning Artisan, \n\t- Hold Breath, \n\t- Hunter\'s Lore, \n\t- Natural Armor, \n\t- Hungry Jaws, \n\t- Language: Draconic, Common',
-			'Tabaxi': '\n\t- Darkvision (60ft), \n\t- Feline Agility, \n\t- Cat\'s Claws (1d4 & climb (20ft) ), \n\t- Cat\'s Talent, \n\t- Language: Common, +1 additional',
-			'Triton': '\n\t- Amphibious, \n\t- Control Air and Water, \n\t- Emissary of the Sea, \n\t- Guardians of the Depths, \n\t- Language: Common, Primordial',
-			'Bugbear': '\n\t- Darkvision (60ft), \n\t- Long-Limbed, \n\t- Powerful Build, \n\t- Sneaky, \n\t- Surprise Attack, \n\t- Language: Common, Goblin',
-			'Goblin': '\n\t- Darkvision (60ft), \n\t- Fury of the Small, \n\t- Nimble Escape, \n\t- Language: Common, Goblin',
+			'Lizardfolk': '\n\t- Bite (1d6), \n\t- Cunning Artisan, \n\t- Hold Breath, \n\t- Hunter\'s Lore, \n\t- Natural Armor, \n\t- Hungry Jaws, \n\t- Languages: Draconic, Common',
+			'Tabaxi': '\n\t- Darkvision (60ft), \n\t- Feline Agility, \n\t- Cat\'s Claws (1d4 & climb (20ft) ), \n\t- Cat\'s Talent, \n\t- Languages: Common, +1 Additional',
+			'Triton': '\n\t- Amphibious, \n\t- Control Air and Water, \n\t- Emissary of the Sea, \n\t- Guardians of the Depths, \n\t- Languages: Common, Primordial',
+			'Bugbear': '\n\t- Darkvision (60ft), \n\t- Long-Limbed, \n\t- Powerful Build, \n\t- Sneaky, \n\t- Surprise Attack, \n\t- Languages: Common, Goblin',
+			'Goblin': '\n\t- Darkvision (60ft), \n\t- Fury of the Small, \n\t- Nimble Escape, \n\t- Languages: Common, Goblin',
 			'Hobgoblin': '\n\t- Darkvision (60ft), \n\t- Martial Training, \n\t- Saving Face, \n\t- Languages: Common, Goblin',
-			'Kobold': '\n\t- Darkvision (60ft), \n\t- Grovel, Cower, and Beg, \n\t- Pack Tactics, \n\t- Sunlight Sensitivity, \n\t- Language: Common, Draconic',
-			'Orc': '\n\t- Darkvision (60ft), \n\t- Aggressive, \n\t- Menacing, \n\t- Powerful Build, \n\t- Language: Common, Orc',
-			'Yuan-Ti Pureblood': '\n\t- Darkvision (60ft), \n\t- Innate Spellcasting (CHA): Poison Spray, Animal Friendship (snakes), \n\tSuggestion (@ 3rd level), suggestion recharges after a long rest',
-			'Grung': '\n\t- Arboreal Alertness, \n\t- Amphibious, \n\t- Poison Immunity, \n\t- Poisonous Skin, \n\t- Standing Leap, \n\t- Water Dependency, \n\t- Language: Grung',
-			'Minotaur': '\n\t- Horns (1d6), \n\t- Goring Rush, \n\t- Hammering Horns, \n\t- Menacing, \n\t- Hybrid Nature, \n\t- Language: Common, Minotaur',
-			'Centaur': '\n\t- Charge, \n\t- Hooves (1d6), \n\t- Equine Build, \n\t- Survivor, \n\t- Hybrid Nature, \n\t- Language: Common, Sylvan',
-			'Awakened Undead': '\n\t- Darkvision (60ft), \n\t- Deadman\'s Respite, \n\t- Grim Fortitude, \n\t- Grave Touched, \n\t- Language: Common, \n\t- Located at: \n\t\thttps://www.dndbeyond.com/characters/races/88796-awakened-undead-v-4',
-			'Half-Halfling / Half-Dragonborn': '\n\t- Stout Resilience, \n\t- Brave, \n\t- Breath Weapon, \n\t- Language: Common, Halfling, Draconic',
-			'Half-Halfling / Half-Kobold': '\n\t- Halfling Nimbleness, \n\t- Darkvision (30ft), \n\t- Pack Tactics, \n\t- Language: Common, Halfling, Draconic',
-			'Half-Halfling / Half-Tortle': '\n\t- Brave, \n\t- Hold Breath, \n\t- Claws (1d4 slashing), \n\t- Survival Instinct, \n\t- Language: Common, Halfling, Aquan',
-			'Half-Halfling / Half-Tiefling': '\n\t- Brave, \n\t- Hellish Resistance, \n\t- Infernal Legacy (Thurmaturgy, @ 3rd level you get Hellish Rebuke), \n\t- Language: Common, Halfling, Infernal',
-			'Half-Halfling / Half-Orc': '\n\t- Brave, \n\t- Aggressive, \n\t- Powerful Build, \n\t- Speed (30 ft), \n\t- Language: Common, Halfling, Orc',
-			'Half-Halfling / Quarter-Orc': '\n\t- Halfling Nimbleness, \n\t- Darkvision (30 ft), \n\t- Relentless Endurance, \n\t- Language: Common, Halfling, Orc',
-			'Half-Halfling / Quarter-Elf': '\n\t- Lucky, \n\t- Darkvision (30ft), \n\t- Fey Ancestry, \n\t- Language: Common, Halfling, Elven, +1 Additional',
-			'Half-Halfling / Half-Kenku': '\n\t- Halfling Nimbleness, \n\t- Kenku Training, \n\t- Expert Forgery, \n\t- Language: Common, Halfling, Auran',
-			'Half-Halfling / Half-Dwarf': '\n\t- Brave, \n\t- Halfling Nimbleness, \n\t- Darkvision (30ft), \n\t- Dwarven Resilience, \n\t- Dwarven Combat Training, \n\t- Language: Common, Halfling, Dwarven',
-			'Half-Halfling / Half-Goblin': '\n\t- Halfling Nimbleness, \n\t- Fury of the Small, \n\t- Darkvision (30 ft), \n\t- Language: Common, Halfling, Goblin',
-			'Half-Halfling / Half-Tabaxi': '\n\t- Halfling Nimbleness, \n\t- Feline Agility, \n\t- Darkvision (30ft), \n\t- Cat\'s Claws (1d4 & 20ft Climbing speed), \n\t- Language: Common, Halfling, +1 additional',
-			'Half-Halfling / Half-Bugbear': '\n\t- Naturally Stealthy, \n\t- Sneaky, \n\t- Surprise Attack, \n\t- Language: Common, Halfling, Goblin',
-			'Half-Halfling / Half-Aasimar': '\n\t- Brave, \n\t- Darkvision (30 ft), \n\t- Celestial Resistance, \n\t- Healing Hands, \n\t- Language: Common, Halfling, Celestial',
+			'Kobold': '\n\t- Darkvision (60ft), \n\t- Grovel, Cower, and Beg, \n\t- Pack Tactics, \n\t- Sunlight Sensitivity, \n\t- Languages: Common, Draconic',
+			'Orc': '\n\t- Darkvision (60ft), \n\t- Aggressive, \n\t- Menacing, \n\t- Powerful Build, \n\t- Languages: Common, Orc',
+			'Yuan-Ti Pureblood': '\n\t- Darkvision (60ft), \n\t- Innate Spellcasting (CHA): Poison Spray, Animal Friendship (snakes), \n\tSuggestion (@ 3rd level), suggestion recharges after a long rest, \n\t- Magic Resistance (ADV on saves against spells and other magical effects), \n\t- Poison Immunity, \n\t- Languages: Common, Abyssal, Draconic',
+			'Grung': '\n\t- Arboreal Alertness, \n\t- Amphibious, \n\t- Poison Immunity, \n\t- Poisonous Skin, \n\t- Standing Leap, \n\t- Water Dependency, \n\t- Languages: Grung',
+			'Minotaur': '\n\t- Horns (1d6), \n\t- Goring Rush, \n\t- Hammering Horns, \n\t- Imposing Presence, \n\t- Languages: Common, Minotaur',
+			'Centaur': '\n\t- Speed: 40ft, \n\t- Fey, \n\t- Charge, \n\t- Hooves (1d4), \n\t- Equine Build, \n\t- Survivor, \n\t- Languages: Common, Sylvan',
+			'Awakened Undead': '\n\t- Darkvision (60ft), \n\t- Deadman\'s Respite, \n\t- Grim Fortitude, \n\t- Grave Touched, \n\t- Languages: Common \n\t- Located at: \n\t\thttps://www.dndbeyond.com/characters/races/88796-awakened-undead-v-4 \n\t\thttps://www.dndbeyond.com/characters/races/XXX',
+			'Half-Halfling / Half-Dragonborn': '\n\t- Stout Resilience, \n\t- Brave, \n\t- Breath Weapon, \n\t- Damage Resistance, \n\t- Languages: Common, Halfling, Draconic',
+			'Half-Halfling / Half-Kobold': '\n\t- Halfling Nimbleness, \n\t- Darkvision (30ft), \n\t- Pack Tactics, \n\t- Languages: Common, Halfling, Draconic',
+			'Half-Halfling / Half-Tortle': '\n\t- Brave, \n\t- Hold Breath, \n\t- Claws (1d4 slashing), \n\t- Survival Instinct, \n\t- Languages: Common, Halfling, Aquan',
+			'Half-Halfling / Half-Tiefling': '\n\t- Brave, \n\t- Hellish Resistance, \n\t- Infernal Legacy (Thurmaturgy, @ 3rd level you get Hellish Rebuke), \n\t- Languages: Common, Halfling, Infernal',
+			'Half-Halfling / Half-Orc': '\n\t- Brave, \n\t- Aggressive, \n\t- Powerful Build, \n\t- Speed (30 ft), \n\t- Languages: Common, Halfling, Orc',
+			'Half-Halfling / Quarter-Orc': '\n\t- Halfling Nimbleness, \n\t- Darkvision (30 ft), \n\t- Relentless Endurance, \n\t- Languages: Common, Halfling, Orc',
+			'Half-Halfling / Quarter-Elf': '\n\t- Lucky, \n\t- Darkvision (30ft), \n\t- Fey Ancestry, \n\t- Languages: Common, Halfling, Elven, +1 Additional',
+			'Half-Halfling / Half-Kenku': '\n\t- Halfling Nimbleness, \n\t- Kenku Training, \n\t- Expert Forgery, \n\t- Languages: Common, Halfling, Auran',
+			'Half-Halfling / Half-Dwarf': '\n\t- Brave, \n\t- Halfling Nimbleness, \n\t- Darkvision (30ft), \n\t- Dwarven Resilience, \n\t- Dwarven Combat Training, \n\t- Languages: Common, Halfling, Dwarven',
+			'Half-Halfling / Half-Goblin': '\n\t- Halfling Nimbleness, \n\t- Fury of the Small, \n\t- Darkvision (30 ft), \n\t- Languages: Common, Halfling, Goblin',
+			'Half-Halfling / Half-Tabaxi': '\n\t- Halfling Nimbleness, \n\t- Feline Agility, \n\t- Darkvision (30ft), \n\t- Cat\'s Claws (1d4 & 20ft Climbing speed), \n\t- Languages: Common, Halfling, +1 Additional',
+			'Half-Halfling / Half-Bugbear': '\n\t- Naturally Stealthy, \n\t- Sneaky, \n\t- Surprise Attack, \n\t- Languages: Common, Halfling, Goblin',
+			'Half-Halfling / Half-Aasimar': '\n\t- Brave, \n\t- Darkvision (30 ft), \n\t- Celestial Resistance, \n\t- Healing Hands, \n\t- Languages: Common, Halfling, Celestial',
+			'Verdan': '\n\t- Black Blood Healing, \n\t- Limited Telepathy, \n\t- Persuasive, \n\t- Telepathic Insight\n\t- Languages: Common, Goblin, +1 Additional', #Acq Inc p.74
+			'Vedalken': '\n\t- Vedalken Dispassion, \n\t- Tireless Precision, \n\t- Partially Amphibious, \n\t- Languages:  Common, Vedalken, +1 Additional',
+			'Loxodon': '\n\t- Powerful Build, \n\t- Loxodon Serentiy, \n\t- Natural Armor, \n\t- Trunk, \n\t- Keen Smell, \n\t- Languages: Common, Loxodon',
+			'Changeling': '\n\t- Change Appearance, \n\t- Changeling Instincts, \n\t- Unsettling Visage, \n\t- Divergent Persona, \n\t- Languages: Common, +2 Additional',
+			'Kalashtar': '\n\t- Dual Mind, \n\t- Mental Discipline, \n\t- Mind Link, \n\t- Psychic Glamour, \n\t- Severed from Dreams, \n\t- Languages: Common, Quori, +1 Additional',
+			'Beasthide Shifter': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Shifting, \n\t- Tough, \n\t- Shifting Feature (+1d6 temp HP, +1 AC), \n\t- Languages: Common',
+			'Longtooth Shifter': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Shifting, \n\t- Fierce, \n\t- Shifting Feature (use fangs for unarmed strike (1d6 + str piercing dmg)), \n\t- Languages: Common',
+			'Swiftstride Shifter': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Shifting, \n\t- Graceful, \n\t- Swift Stride (+5 ft speed), \n\t- Shifting Feature (walk speed +5 ft, move 10 ft as reaction if enemy w/in 5ft), \n\t- Languages: Common',
+			'Wildhunt Shifter': '\n\t- Darkvision (60ft), \n\t- Keen Senses, \n\t- Shifting, \n\t- Natural Tracker, \n\t- Mark the Scent, \n\t- Shifting Feature (ADV on WIS saves), \n\t- Languages: Common',
+			'Envoy Warforged': '\n\t- Warforged Resilience, \n\t- Sentry\'s Rest, \n\t- Integrated Protection, \n\t- Specialized Design, \n\t- Integrated Tool, \n\t- Languages: Common',
+			'Juggernaut Warforged': '\n\t- Warforged Resilience, \n\t- Sentry\'s Rest, \n\t- Integrated Protection, \n\t- Iron Fists (1d4 + Str), \n\t- Powerful Build, \n\t- Languages: Common',
+			'Skirmisher Warforged': '\n\t- Warforged Resilience, \n\t- Sentry\'s Rest, \n\t- Integrated Protection, \n\t- Swift (+10 ft speed), \n\t- Light Step, \n\t- Languages: Common',
 }
 
 classAbilities = { 'Barbarian - Ancestral Guardian': '\n\t- Rage (3 / +2), \n\t- Unarmored Defense, \n\t- Reckless Attack, \n\t- Danger Sense, \n\t- Ancestral Protectors',
@@ -523,6 +593,7 @@ classAbilities = { 'Barbarian - Ancestral Guardian': '\n\t- Rage (3 / +2), \n\t-
 				   'Barbarian - Storm Herald': '\n\t- Rage (3 / +2), \n\t- Unarmored Defense, \n\t- Reckless Attack, \n\t- Danger Sense, \n\t- Storm Aura (Desert, Sea, Tundra)',
 				   'Barbarian - Totem Warrior': '\n\t- Rage (3 / +2), \n\t- Unarmored Defense, \n\t- Reckless Attack, \n\t- Danger Sense, \n\t- Spirit Seeker, \n\t- Totem Spirit (Bear, Eagle, Wolf, Elk, Tiger)',
 				   'Barbarian - Zealot': '\n\t- Rage (3 / +2), \n\t- Unarmored Defense, \n\t- Reckless Attack, \n\t- Danger Sense, \n\t- Divine Fury, \n\t- Warrior of the Gods',
+				   'Barbarian - Wild Soul': '\n\t- Rage (3 / +2), \n\t- Unarmored Defense, \n\t- Reckless Attack, \n\t- Danger Sense, \n\t- Lingering Magic, \n\t- Wild Surge',
 				   'Bard - Glamour': '\n\t- Spellcasting (CHA), \n\t- Bardic Inspiration (d6), \n\t- Jack of All Trades, \n\t- Song of Rest (d6), \n\t- Expertise, \n\t- Mantle of Inspiration, \n\t- Entralling Performance',
 				   'Bard - Swords': '\n\t- Spellcasting (CHA), \n\t- Bardic Inspiration (d6), \n\t- Jack of All Trades, \n\t- Song of Rest (d6), \n\t- Expertise, \n\t- Bonus Proficiencies (Med Armor, Scimitar), \n\t- Fighting Style (Dueling, Two Weapon Fighting), \n\t- Blade Flourish (Defensive Flourish, Slashing Flourish, Mobile Flourish)',
 				   'Bard - Lore': '\n\t- Spellcasting (CHA), \n\t- Bardic Inspiration (d6), \n\t- Jack of All Trades, \n\t- Song of Rest (d6), \n\t- Expertise, \n\t- Bonus Proficiencies (+3 Skills), \n\t- Cutting Words',
@@ -540,6 +611,7 @@ classAbilities = { 'Barbarian - Ancestral Guardian': '\n\t- Rage (3 / +2), \n\t-
 				   'Cleric - Nature Domain': '\n\t- Spellcasting (WIS), \n\t- Channel Divinity (Turn Undead), \n\t- Acolyte of Nature, \n\t- Bonus Proficiency (Heavy Armor), \n\t- Channel Divinity (Charm Animals and Plants)',
 				   'Cleric - War Domain': '\n\t- Spellcasting (WIS), \n\t- Channel Divinity (Turn Undead), \n\t- Bonus Proficiencies (Martial Weapons & Heavy Armor), \n\t- War Priest, \n\t- Channel Divinity (Guided Strike)',
 				   'Cleric - Order Domain': '\n\t- Spellcasting (WIS), \n\t- Channel Divinity (Turn Undead), \n\t- Bonus Proficiencies (Heavy Armor & either Intimidation or Persuasion Skill), \n\t- Voice of Authority, \n\t- Channel Divinity (Order\'s Demand)',
+				   'Cleric - Blood Domain': '\n\t- Spellcasting (WIS), \n\t- Channel Divinity (Turn Undead), \n\t- Bonus Proficiencies (Martial Weapons), \n\t- Bloodletting Focus, \n\t- Channel Divinity (Blood Puppet)',
 				   'Druid - Dreams': '\n\t- Druidic (Language: Druidic), \n\t- Spellcasting (WIS), \n\t- Wild Shape (1/4 CR, No Flying or Swimming), \n\t- Balm of the Summer Court',
 				   'Druid - Land': '\n\t- Druidic (Language: Druidic), \n\t- Spellcasting (WIS), \n\t- Wild Shape (1/4 CR, No Flying or Swimming), \n\t- Bonus Cantrip, \n\t- Natural Recovery, \n\t- Circle Spells (Arctic, Coast, Desert, Forest, Grassland, Mountain, Swamp, Underdark)',
 				   'Druid - Moon': '\n\t- Druidic (Language: Druidic), \n\t- Spellcasting (WIS), \n\t- Wild Shape (1/4 CR, No Flying or Swimming), \n\t- Combat Wild Shape, \n\t- Circle Forms (Wild Shape 1 CR)',
@@ -562,6 +634,7 @@ classAbilities = { 'Barbarian - Ancestral Guardian': '\n\t- Rage (3 / +2), \n\t-
 				   'Monk - Shadow': '\n\t- Unarmored Defense, \n\t- Martial Arts (d4), \n\t- Ki (3 points), \n\t- Unarmored Movement (10 ft), \n\t- Deflect Missiles, \n\t- Shadow Arts',
 				   'Monk - Sun Soul': '\n\t- Unarmored Defense, \n\t- Martial Arts (d4), \n\t- Ki (3 points), \n\t- Unarmored Movement (10 ft), \n\t- Deflect Missiles, \n\t- Radiant Sun Bolt',
 				   'Monk - Tranquility': '\n\t- Unarmored Defense, \n\t- Martial Arts (d4), \n\t- Ki (3 points), \n\t- Unarmored Movement (10 ft), \n\t- Deflect Missiles, \n\t- Healing Hands',
+				   'Monk - Cobalt Soul': '\n\t- Unarmored Defense, \n\t- Martial Arts (d4), \n\t- Ki (3 points), \n\t- Unarmored Movement (10 ft), \n\t- Deflect Missiles, \n\t- Mystical Erudition, \n\t- Extract Aspects',
 				   'Paladin - Conquest': '\n\t- Divine Sense, \n\t- Lay on Hands, \n\t- Spellcasting (CHA), \n\t- Divine Smite, \n\t- Divine Health, \n\t- Channel Divinity (Conquering Presence), \n\t- Channel Divinity (Guided Strike)',
 				   'Paladin - Vengeance': '\n\t- Divine Sense, \n\t- Lay on Hands, \n\t- Spellcasting (CHA), \n\t- Divine Smite, \n\t- Divine Health, \n\t- Channel Divinity (Abjure Enemy), \n\t- Channel Divinity (Vow of Enmity)',
 				   'Paladin - Redemption': '\n\t- Divine Sense, \n\t- Lay on Hands, \n\t- Spellcasting (CHA), \n\t- Divine Smite, \n\t- Divine Health, \n\t- Channel Divinity (Emissary of Peace), \n\t- Channel Divinity (Rebuke the Violent)',
@@ -569,6 +642,7 @@ classAbilities = { 'Barbarian - Ancestral Guardian': '\n\t- Rage (3 / +2), \n\t-
 				   'Paladin - Crown': '\n\t- Divine Sense, \n\t- Lay on Hands, \n\t- Spellcasting (CHA), \n\t- Divine Smite, \n\t- Divine Health, \n\t- Channel Divinity (Champion Challenge), \n\t- Channel Divinity (Turn the Tide)',
 				   'Paladin - Devotion': '\n\t- Divine Sense, \n\t- Lay on Hands, \n\t- Spellcasting (CHA), \n\t- Divine Smite, \n\t- Divine Health, \n\t- Channel Divinity (Sacred Weapon), \n\t- Channel Divinity (Turn the Unholy)',
 				   'Paladin - Oathbreaker': '\n\t- Divine Sense, \n\t- Lay on Hands, \n\t- Spellcasting (CHA), \n\t- Divine Smite, \n\t- Divine Health, \n\t- Channel Divinity (Control Undead), \n\t- Channel Divinity (Dreadful Aspect)',
+				   'Paladin - Secrets': '\n\t- Divine Sense, \n\t- Lay on Hands, \n\t- Spellcasting (CHA), \n\t- Divine Smite, \n\t- Divine Health, \n\t- Channel Divinity (Keep Secrets), \n\t- Channel Divinity (Learn Secrets)',
 				   'Ranger - Beast Master': '\n\t- Favored Enemy (beasts, fey, humanoids, monstrosities, or undead), \n\t- Natural Explorer, \n\t- Fighting Style, \n\t- Spellcasting (WIS), \n\t- Primeval Awareness, \n\t- Ranger\'s Companion',
 				   'Ranger - Hunter': '\n\t- Favored Enemy (beasts, fey, humanoids, monstrosities, or undead), \n\t- Natural Explorer, \n\t- Fighting Style, \n\t- Spellcasting (WIS), \n\t- Primeval Awareness, \n\t- Hunter\'s Prey',
 				   'Ranger - Monster Slayer': '\n\t- Favored Enemy (beasts, fey, humanoids, monstrosities, or undead), \n\t- Natural Explorer, \n\t- Fighting Style, \n\t- Spellcasting (WIS), \n\t- Primeval Awareness, \n\t- Monster Slayer Magic, \n\t- Hunter\'s Sense, \n\t- Slayer\'s Prey',
@@ -584,9 +658,10 @@ classAbilities = { 'Barbarian - Ancestral Guardian': '\n\t- Rage (3 / +2), \n\t-
 				   'Rogue - Swashbuckler': '\n\t- Expertise, \n\t- Sneak Attack (2d6), \n\t- Thieves\' Cant, \n\t- Cunning Action, \n\t- Fancy Footwork, \n\t- Rakish Audacity',
 				   'Sorcerer - Divine Soul': '\n\t- Spellcasting (WIS), \n\t- Font of Magic (3 Sorcery points, Flexible Casting), \n\t- Metamagic (2 choices), \n\t- Divine Magic, \n\t- Favored by the Gods',
 				   'Sorcerer - Draconic Bloodline': '\n\t- Spellcasting (WIS), \n\t- Font of Magic (3 Sorcery points, Flexible Casting), \n\t- Metamagic (2 choices), \n\t- Dragon Ancestor, \n\t- Draconic Resilience',
-				   'Sorcerer - Shadow Magic': '\n\t- Spellcasting (WIS), \n\t- Font of Magic (3 Sorcery points, Flexible Casting), \n\t- Metamagic (2 choices), \n\t- Eyes of the Dark (Darkvision 120ft), \n\t- Stength of the Grave',
+				   'Sorcerer - Shadow Magic': '\n\t- Spellcasting (WIS), \n\t- Font of Magic (3 Sorcery points, Flexible Casting), \n\t- Metamagic (2 choices), \n\t- Eyes of the Dark (Darkvision 120ft), \n\t- Strength of the Grave',
 				   'Sorcerer - Storm Sorcery': '\n\t- Spellcasting (WIS), \n\t- Font of Magic (3 Sorcery points, Flexible Casting), \n\t- Metamagic (2 choices), \n\t- Wind Speaker (Language: Primordial), \n\t- Tempestuous Magic',
 				   'Sorcerer - Wild Magic': '\n\t- Spellcasting (WIS), \n\t- Font of Magic (3 Sorcery points, Flexible Casting), \n\t- Metamagic (2 choices), \n\t- Wild Magic Surge, \n\t- Tides of Chaos',
+				   'Sorcerer - Phoenix Sorcery': '\n\t- Spellcasting (WIS), \n\t- Font of Magic (3 Sorcery points, Flexible Casting), \n\t- Metamagic (2 choices), \n\t- Ignite, \n\t- Mantle of Flame',
 				   'Warlock - The Archfey': '\n\t- Pact Magic (CHA), \n\t- Eldritch Invocations (2), \n\t- Pact Boon (Pact of the Chain, Blade, or Tome), \n\t- Fey Presence',
 				   'Warlock - The Celestial': '\n\t- Pact Magic (CHA), \n\t- Eldritch Invocations (2), \n\t- Pact Boon (Pact of the Chain, Blade, or Tome), \n\t- Bonus Cantrips (Light & Sacred Flame), \n\t- Healing Light',
 				   'Warlock - The Fiend': '\n\t- Pact Magic (CHA), \n\t- Eldritch Invocations (2), \n\t- Pact Boon (Pact of the Chain, Blade, or Tome), \n\t- Dark One\'s Blessing',
@@ -609,11 +684,32 @@ classAbilities = { 'Barbarian - Ancestral Guardian': '\n\t- Rage (3 / +2), \n\t-
 				   'Blood Hunter - Mutant': '\n\t- Hunter\'s Bane, \n\t- Crimson Rite (Flame, Frozen, Storm), \n\t- Fighting Style, \n\t- Blood Maledict, \n\t- Formulas (3 Mutagen Formulas), \n\t- Mutagen Craft',
 				   'Blood Hunter - Ghostslayer': '\n\t- Hunter\'s Bane, \n\t- Crimson Rite (Flame, Frozen, Storm), \n\t- Fighting Style, \n\t- Blood Maledict, \n\t- Rite of the Dawn',
 				   'Blood Hunter - Profane Soul': '\n\t- Hunter\'s Bane, \n\t- Crimson Rite (Flame, Frozen, Storm), \n\t- Fighting Style, \n\t- Blood Maledict, \n\t- Otherworldly Patron, \n\t- Pact Magic, \n\t- Rite Focus',
-				   'Artificer - Alchemist': '\n\t- Magical Tinkering, \n\t- Spellcasting (INT) - Tools Required, \n\t- Infuse Item (3 infusions), \n\t- Tool Proficiency, \n\t- Tools of the Trade \n\t\t+ Proficiency w/ Alchemist Supplies & Herbalism Kit, \n\t\t+ Crafting potions takes a 1/4 of the time and 1/2 the gold, \n\t- Alchemist Spells (don\'t count against prepared limit), \n\t- Alchemical Homunculus',
-				   'Artificer - Artillerist': '\n\t- Magical Tinkering, \n\t- Spellcasting (INT) - Tools Required, \n\t- Infuse Item (3 infusions), \n\t- Tool Proficiency, \n\t- Tools of the Trade \n\t\t+ Proficiency w/ Smith\'s Tools & Woodcarver\'s Tools, \n\t\t+ Crafting wands takes 1/4 of the time and 1/2 the gold, \n\t- Artillerist Spells (don\'t count against prepared limit), \n\t- Arcane Turret',
-				   '': '',
+				   'Artificer - Alchemist': '\n\t- Magical Tinkering, \n\t- Spellcasting (INT) - Tools Required, \n\t- Infuse Item (3 infusions), \n\t- Tool Proficiency, \n\t- Tool Expertise, \n\t- Tools of the Trade, \n\t\t+ Proficiency w/ Alchemist Supplies & Herbalism Kit, \n\t\t+ Crafting potions takes a 1/4 of the time and 1/2 the gold, \n\t- Alchemist Spells (don\'t count against prepared limit), \n\t- Alchemical Homunculus',
+				   'Artificer - Artillerist': '\n\t- Magical Tinkering, \n\t- Spellcasting (INT) - Tools Required, \n\t- Infuse Item (3 infusions), \n\t- Tool Proficiency, \n\t- Tool Expertise, \n\t- Tools of the Trade, \n\t\t+ Proficiency w/ Smith\'s Tools & Woodcarver\'s Tools, \n\t\t+ Crafting wands takes 1/4 of the time and 1/2 the gold, \n\t- Artillerist Spells (don\'t count against prepared limit), \n\t- Arcane Turret',
+				   'Illrigger - Shadowmaster': '\n\t- Forked Tongue, \n\t- Infernal Conduit, \n\t- Spellcasting (CHA), \n\t- Baleful Interdict, \n\t- Hellsight, \n\t- Knight of Hell (Moloch), \n\t- Invoke Authority (Cloud of Brimstone), \n\t- Invoke Authority (Compel the Graceless)',
+				   'Illrigger - Painkiller': '\n\t- Forked Tongue, \n\t- Infernal Conduit, \n\t- Spellcasting (CHA), \n\t- Baleful Interdict, \n\t- Hellsight, \n\t- Knight of Hell (Dispater), \n\t- Invoke Authority (Devastator), \n\t- Invoke Authority (Compel the Weak)',
+				   'Illrigger - Architect of Ruin': '\n\t- Forked Tongue, \n\t- Infernal Conduit, \n\t- Spellcasting (CHA), \n\t- Baleful Interdict, \n\t- Hellsight, \n\t- Knight of Hell (Asmodeus), \n\t- Invoke Authority (Infernal Arcanist), \n\t- Invoke Authority (Compel the Cedulous)',
 }
 
+acquisitionsJob = [ 'Cartographer',
+					'Decisionist',
+					'Documancer',
+					'Hoardsperson',
+					'Loremonger',
+					'Obviator',
+					'Occultant',
+					'Secretarian',
+]
+
+acqAbilities = { 'Cartographer': '\n\t- Proficiency with Cartographer\'s Tools and either vehicles (land) or vehicles (water), \n\t- It\'s a Rental',
+				 'Decisionist': '\n\t- Proficiency with Musical Instrument (Horn), \n\t- Tiebreaker',
+				 'Documancer': '\n\t- Proficiency with Calligrapher\'s Supplies, \n\t- Gift of Words',
+				 'Hoardsperson': '\n\t- Proficiency with Jeweler\'s Tools, \n\t- What a Deal',
+				 'Loremonger': '\n\t- Proficiency with one of the following: Artisan\'s Tools (choose type), Navigator\'s Tools, vehicles (land), vehicles (water), \n\t- Whisper Jar',
+				 'Obviator': '\n\t- Proficiency with Alchemist\'s Supplies, \n\t- Read the Opposition',
+				 'Occultant': '\n\t- Proficiency with one of the following: Cook\'s Utensils, Leatherworker\'s Tools, or Weaver\'s Tools, \n\t- Read the Kill',
+				 'Secretarian': '\n\t- Proficiency with one of the following: Gaming Set, Musical Instrument, or Disguise Kit, \n\t- Sending Stone',	
+}
 
 namePiece = { 0: '',
 			  1: '',
@@ -1316,6 +1412,7 @@ dndGender = ""
 dndAlignment = ""
 dndName = ""
 igotclass = ""
+acqJob = ""
 end = None
 printColor = ""
 
@@ -1323,10 +1420,11 @@ printColor = ""
 
 def raceSel():
 	global dndRace
-	#shuffler()
-	d30 = random.randrange(0,30)
-	#dndRace = races[d30]
-	dndRace = races[18] #test a specific race
+	shuffler()
+	#d31 = random.randrange(0,31)
+	#dndRace = races[d31]
+	dndRace = random.choice(races)
+	#dndRace = races[18] #test a specific race
 
 	if dndRace == 'Elf':
 		d6 = random.randrange(0,6)
@@ -1374,12 +1472,22 @@ def raceSel():
 		d10 = random.randrange(0,10)
 		dndRace = dragonborn_subraces[d10] + " " + dndRace
 
+	elif 'Shifter' in dndRace:
+		for i in range(10):
+			random.shuffle(shifter_subraces)
+		dndRace = random.choice(shifter_subraces)
+
+	elif 'Warforged' in dndRace:
+		for i in range(10):
+			random.shuffle(warforged_subraces)
+		dndRace = random.choice(warforged_subraces)
+
 	print("Race: " + colored(dndRace, 'cyan'))
 
 #################
 
 def shuffler():
-	for i in range(20):
+	for i in range(100):
 		random.shuffle(dndclass)
 		random.shuffle(races)
 
@@ -1387,15 +1495,16 @@ def shuffler():
 
 def classSel():
 	global dndClass,igotclass,end,druid_land
-	d14 = random.randrange(0,14)
-	dndClass = dndclass[d14] 
-	#dndClass = dndclass[13] #test value to verify specific classes function
+	shuffler()
+	d15 = random.randrange(0,15)
+	dndClass = dndclass[d15] 
+	#dndClass = dndclass[14] #test value to verify specific classes function
 	#print(dndClass)
 
 	if 'Barbarian' in dndClass:
-		d6 = random.randrange(0,6)
-		dndClass = barbarian_subclass[d6] + " " + dndClass
-		igotclass = "Barbarian - " + barbarian_subclass[d6][12:end] 
+		d7 = random.randrange(0,7)
+		dndClass = barbarian_subclass[d7] + " " + dndClass
+		igotclass = "Barbarian - " + barbarian_subclass[d7][12:end] 
 
 	elif 'Bard' in dndClass:
 		d5 = random.randrange(0,5)
@@ -1430,23 +1539,23 @@ def classSel():
 		igotclass = "Fighter - " + fighter_subclass[d9]
 
 	elif 'Monk' in dndClass:
-		d8 = random.randrange(0,8)
-		dndClass = monk_subclass[d8] + " " + dndClass
-		if ' the ' in monk_subclass[d8]:
-			igotclass = 'Monk - ' + monk_subclass[d8][11:end]
+		d9 = random.randrange(0,9)
+		dndClass = monk_subclass[d9] + " " + dndClass
+		if ' the ' in monk_subclass[d9]:
+			igotclass = 'Monk - ' + monk_subclass[d9][11:end]
 		else:
-			igotclass = 'Monk - ' + monk_subclass[d8][7:end]
+			igotclass = 'Monk - ' + monk_subclass[d9][7:end]
 
 	elif 'Paladin' in dndClass:
-		d7 = random.randrange(0,7)
+		d8 = random.randrange(0,8)
 		d4 = random.randrange(0,4)
-		dndClass = paladin_subclass[d7] + " " + dndClass + " trained in the art of " + paladin_style[d4]
-		if 'Oathbreaker' in paladin_subclass[d7]:
+		dndClass = paladin_subclass[d8] + " " + dndClass + " trained in the art of " + paladin_style[d4]
+		if 'Oathbreaker' in paladin_subclass[d8]:
 			igotclass = 'Paladin - Oathbreaker'
-		elif ' the ' in paladin_subclass[d7]:
-			igotclass = 'Paladin - ' + paladin_subclass[d7][12:end]
+		elif ' the ' in paladin_subclass[d8]:
+			igotclass = 'Paladin - ' + paladin_subclass[d8][12:end]
 		else:
-			igotclass = 'Paladin - ' + paladin_subclass[d7][8:end]
+			igotclass = 'Paladin - ' + paladin_subclass[d8][8:end]
 
 	elif 'Ranger' in dndClass:
 		d6 = random.randrange(0,6)
@@ -1460,9 +1569,9 @@ def classSel():
 		igotclass = "Rogue - " + rogue_subclass[d7]
 
 	elif 'Sorcerer' in dndClass:
-		d5 = random.randrange(0,5)
-		dndClass = sorcerer_subclass[d5] + " " + dndClass
-		igotclass = "Sorcerer - " + sorcerer_subclass[d5]
+		d6 = random.randrange(0,6)
+		dndClass = sorcerer_subclass[d6] + " " + dndClass
+		igotclass = "Sorcerer - " + sorcerer_subclass[d6]
 
 	elif 'Warlock' in dndClass:
 		d8 = random.randrange(0,8)
@@ -1490,13 +1599,19 @@ def classSel():
 		d3 = random.randrange(0,3)
 		d3One = random.randrange(0,3)
 
-		dndClass = bloodhunter_subclass[d3] + " " + dndClass + " who has undertaken the " + bloodhunter_rites[d3One]
+		dndClass = bloodhunter_subclass[d3] + " " + dndClass + " who has undertaken the " + bloodhunter_rites[d3]
 		igotclass = "Blood Hunter - " + bloodhunter_subclass[d3][13:end]
 
 	elif 'Artificer' in dndClass:
 		d2 = random.randrange(0,2)
 		dndClass = "Artificer - " + artificer_subclass[d2]
 		igotclass = dndClass
+
+	elif 'Illrigger' in dndClass:
+		d3 = random.randrange(0,3)
+		d4 = random.randrange(0,4)
+		dndClass = "Illrigger - " + illrigger_subclass[d3] + " trained in the art of " + illrigger_style[d4]
+		igotclass = "Illrigger - " + illrigger_subclass[d3]
 
 	print("Class: " + colored(dndClass,'green'))
 	#print(dndClass.split()[1])	#This will print the second word in a value
@@ -1506,19 +1621,29 @@ def classSel():
 def backgroundSel():
 	global dndBackground,gender
 
-	d44 = random.randrange(0,44)
-	dndBackground = background[d44]
+	#d48 = random.randrange(0,48)
+	#dndBackground = background[d48]
+	dndBackground = random.choice(background)
 	
 	if 'Faction Agent' in dndBackground:
 		d10 = random.randrange(0,10)
 		dndBackground = dndBackground + " for " + factions[d10]
 
-	print("Background: " + colored(dndBackground, 'magenta'))
+	d100 = random.randrange(1,101)
+	if d100 > 93:
+		for i in range(10):
+			random.shuffle(bgFeature)
+		bg_feature = random.choice(bgFeature)
+
+		print("Background: " + colored(dndBackground, 'magenta') + colored(" with the ", 'magenta') + colored(bg_feature, 'magenta') + colored(" background feature.", 'magenta'))
+
+	else:
+		print("Background: " + colored(dndBackground, 'magenta'))
 
 #################
 
 def miscSel():
-	global dndGender, dndAlignment, dndName
+	global dndGender, dndAlignment, dndName, acqJob
 	d2 = random.randrange(0,2)
 	d9 = random.randrange(0,9)
 
@@ -1544,6 +1669,13 @@ def miscSel():
 
 	colorMe = ""
 	gendColor = ""
+	d100 = random.randrange(1,101)
+	#print("DEBUG -- d100 roll: " + str(d100))
+	if d100 > 85:
+		for i in range(10):
+			random.shuffle(acquisitionsJob)
+		acqJob = random.choice(acquisitionsJob)
+		print("Acquisitions Inc. Franchise Member Role: " + colored(acqJob, 'green') + colored(" (Rank 1)", 'green'))
 
 """
 	for i in range(3):
@@ -1613,13 +1745,17 @@ def nameChoice():
 #################
 
 def specialAbilities():
-	global igotclass
+	global igotclass, acqJob
 	hume = dndRace
 	if 'Human' in hume:
 		hume = "Human"
 	print("Ability Score Bonuses: " + colored(racialScores[hume], 'yellow'))
 	print("Racial Abilities: " + racials[hume] + "\n")
 	print("Class Abilities: " + classAbilities[igotclass] + "\n")
+	
+	if acqJob != "":
+		print("Acquisitions Inc Job Abilities: " + acqAbilities[acqJob] + "\n")
+		acqJob = ""
 
 	igotclass = ""
 
@@ -1839,12 +1975,21 @@ printer()
 
 # Things to add:
 # ----------------
-# - Illrigger Class from Strongholds Guide & Abilities
-# - New Races from Aquisitions Inc**
-# - Backgrounds from Strahd
-# - Magic Items Update
-# - 
-# - 
-# - 
+# - ?
+#
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
 
 
